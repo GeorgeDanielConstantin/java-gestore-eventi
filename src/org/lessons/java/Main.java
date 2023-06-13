@@ -62,10 +62,12 @@ public class Main {
                 String bookingChoice = scan.nextLine();
 
                 if (bookingChoice.equalsIgnoreCase("Sì")) {
+                    System.out.print("Inserisci il numero di prenotazioni da effettuare: ");
+                    int nBooked = Integer.parseInt(scan.nextLine());
                     try {
-                        System.out.print("Inserisci il numero di prenotazioni da effettuare: ");
-                        int nBooked = Integer.parseInt(scan.nextLine());
-                        concerto.book(nBooked);
+                        for (int i = 0; i < nBooked; i++) {
+                            concerto.book(nBooked);
+                        }
                         System.out.println("Prenotazione effettuata con successo.");
                     } catch (InvalidCapacity e) {
                         System.out.println("Impossibile effettuare la prenotazione: " + e.getMessage());
@@ -86,10 +88,12 @@ public class Main {
                 String cancelChoice = scan.nextLine();
 
                 if (cancelChoice.equalsIgnoreCase("Sì")) {
+                    System.out.print("Inserisci il numero di posti da disdire: ");
+                    int nCancelled = Integer.parseInt(scan.nextLine());
                     try {
-                        System.out.print("Inserisci il numero di posti da disdire: ");
-                        int nCancelled = Integer.parseInt(scan.nextLine());
-                        concerto.cancel(nCancelled);
+                        for (int i = 0; i < nCancelled; i++) {
+                            concerto.cancel(nCancelled);
+                        }
                         System.out.println("Disdetta effettuata con successo.");
                     } catch (InvalidCapacity e) {
                         System.out.println("Impossibile effettuare la disdetta: " + e.getMessage());

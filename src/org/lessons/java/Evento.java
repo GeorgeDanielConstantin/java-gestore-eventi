@@ -64,7 +64,7 @@ public abstract class Evento {
         }
 
 
-        booked += nBooked;
+        booked++;
     }
 
     public void cancel(int nCancelled) throws EventException {
@@ -76,7 +76,7 @@ public abstract class Evento {
             throw new InvalidCapacity("Non ci sono abbastanza prenotazioni da disdire.");
         }
 
-        booked -= nCancelled;
+        booked--;
     }
 
     @Override
