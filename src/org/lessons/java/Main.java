@@ -3,7 +3,9 @@ package org.lessons.java;
 import org.lessons.java.exceptions.EventException;
 import org.lessons.java.exceptions.InvalidCapacity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
@@ -15,17 +17,42 @@ public class Main {
         String title = scan.nextLine();
 
         System.out.print("Data (formato dd/MM/yyyy): ");
-        LocalDate date = LocalDate.parse(scan.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
+        boolean inputDate = false;
+        LocalDate date = null;
+        while (!inputDate) {
+            try {
+                date = LocalDate.parse(scan.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                inputDate = true;
+            } catch (Exception e) {
+                System.out.println("Formato data non valido. Inserisci una data nel formato dd/MM/yyyy.");
+                System.out.print("Data (formato dd/MM/yyyy): ");
+            }
+        }
         System.out.print("Numero di posti totali: ");
         int capacity = Integer.parseInt(scan.nextLine());
 
+        System.out.print("Ora (formato HH:mm): ");
+        boolean inputHour = false;
+        LocalTime hour = null;
+        while (!inputHour) {
+            try {
+                hour = LocalTime.parse(scan.nextLine(), DateTimeFormatter.ofPattern(("HH:mm")));
+                inputHour = true;
+            } catch (Exception e) {
+                System.out.println("Formato ora non valido. Inserisci un orario nel formato HH:mm.");
+                System.out.print("Ora (formato HH:mm): ");
+            }
+        }
+
+        System.out.print("Prezzo: ");
+        BigDecimal price = new BigDecimal(scan.nextLine());
+
         try {
-            Evento evento = new Evento(title, date, capacity);
-            System.out.println("Evento creato con successo!");
-            System.out.println("Titolo: " + evento.getTitle());
-            System.out.println("Data: " + evento.getDate());
-            System.out.println("Posti totali: " + evento.getCapacity());
+            Concerto concerto = new Concerto(title, date, capacity, hour, price);
+            System.out.println("Concerto creato con successo!");
+            System.out.println("Titolo: " + concerto.getTitle());
+            System.out.println("Data: " + concerto.getDate());
+            System.out.println("Posti totali: " + concerto.getCapacity());
 
             boolean bookingSwitch = false;
             boolean cancelSwitch = false;
@@ -38,11 +65,8 @@ public class Main {
                     try {
                         System.out.print("Inserisci il numero di prenotazioni da effettuare: ");
                         int nBooked = Integer.parseInt(scan.nextLine());
-
-                        for (int i = 0; i < nBooked; i++) {
-                            evento.book(nBooked);
-                            System.out.println("Prenotazione effettuata con successo.");
-                        }
+                        concerto.book(nBooked);
+                        System.out.println("Prenotazione effettuata con successo.");
                     } catch (InvalidCapacity e) {
                         System.out.println("Impossibile effettuare la prenotazione: " + e.getMessage());
                     }
@@ -53,8 +77,8 @@ public class Main {
             } while (!bookingSwitch);
 
 
-            System.out.println("Numero di posti prenotati: " + evento.getBooked());
-            System.out.println("Posti disponibili: " + (evento.getCapacity() - evento.getBooked()));
+            System.out.println("Numero di posti prenotati: " + concerto.getBooked());
+            System.out.println("Posti disponibili: " + (concerto.getCapacity() - concerto.getBooked()));
 
 
             do {
@@ -64,26 +88,26 @@ public class Main {
                 if (cancelChoice.equalsIgnoreCase("Sì")) {
                     try {
                         System.out.print("Inserisci il numero di posti da disdire: ");
-                        int nCancelled = scan.nextInt();
-
-                        for (int i = 0; i < nCancelled; i++) {
-                            evento.cancel(nCancelled);
-                            System.out.println("Disdetta effettuata con successo.");
-                        }
+                        int nCancelled = Integer.parseInt(scan.nextLine());
+                        concerto.cancel(nCancelled);
+                        System.out.println("Disdetta effettuata con successo.");
                     } catch (InvalidCapacity e) {
                         System.out.println("Impossibile effettuare la disdetta: " + e.getMessage());
                     }
                 } else if (cancelChoice.equalsIgnoreCase("No")) {
-                    System.out.println("Nessuna prenotazione effettuata.");
+                    System.out.println("Nessuna disdetta effettuata.");
                     cancelSwitch = true;
                 } else System.out.println("Scelta non valida. Riprova");
             } while (!cancelSwitch);
 
-            System.out.println("Numero di posti prenotati: " + evento.getBooked());
-            System.out.println("Posti disponibili: " + (evento.getCapacity() - evento.getBooked()));
+            System.out.println("Numero di posti prenotati: " + concerto.getBooked());
+            System.out.println("Posti disponibili: " + (concerto.getCapacity() - concerto.getBooked()));
+
+            System.out.println(concerto);
 
         } catch (EventException e) {
-            System.out.println("Errore durante la creazione dell'evento: " + e.getMessage());
+            System.out.println("Errore durante la creazione del concerto: " + e.getMessage());
         }
+        scan.close();
     }
 }

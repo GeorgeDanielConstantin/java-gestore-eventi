@@ -5,9 +5,8 @@ import org.lessons.java.exceptions.EventException;
 import org.lessons.java.exceptions.InvalidCapacity;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
-public class Evento {
+public abstract class Evento {
     private final int capacity;
     private String title;
     private LocalDate date;
@@ -16,15 +15,16 @@ public class Evento {
     public Evento(String title, LocalDate date, int capacity) throws EventException {
         if (date.isBefore(LocalDate.now())) {
             throw new DateBefore("La date dell'evento non può essere passata.");
-        }
-        if (capacity <= 0) {
+        } else if (capacity <= 0) {
             throw new InvalidCapacity("Il numero di posti totali deve essere positivo.");
+        } else if (title.isEmpty()) {
+            throw new IllegalArgumentException("Il titolo non può essere vuoto");
+        } else {
+            this.title = title;
+            this.date = date;
+            this.capacity = capacity;
+            this.booked = 0;
         }
-        this.title = title;
-        this.date = date;
-        this.capacity = capacity;
-        this.booked = 0;
-
     }
 
     public String getTitle() {
@@ -80,8 +80,5 @@ public class Evento {
     }
 
     @Override
-    public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return date.format(formatter) + " - " + title;
-    }
+    public abstract String toString();
 }
